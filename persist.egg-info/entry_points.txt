@@ -1,0 +1,3 @@
+[console_scripts]
+persist = persist.persist:main
+
