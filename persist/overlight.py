@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #from astropy.io import fits
+#author Zheltoukhov Sergey 
 import numpy as np
 #import time
 #import os
@@ -24,7 +25,7 @@ def correct(data,res,points,zeroLevel,scale,bias,nnc=False):
 		pixel = data[:,x,y]						#все считывания этого пикселя
 		try:
 			last_norm = ( np.nonzero(pixel>zeroLevel[x,y]+dADU) )[0][-1]
-		except:
+		except IndexError as e:
 			#print(0)
 			last_norm = -1
 

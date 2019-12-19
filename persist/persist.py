@@ -12,6 +12,7 @@ import sys
 import argparse
 import time
 import persist.my_non_lin_corr7 as my_non_lin_corr7
+from os.path import join
 
 sss=time.time()
 
@@ -108,7 +109,7 @@ def main(string=None):
 		namespace = parser.parse_args()
 
 
-	path=os.path.dirname(os.path.abspath(__file__) )+'/'		#WINDOWS MUST DIE!
+	path=os.path.dirname(os.path.abspath(__file__) )		#WINDOWS MUST DIE!
 
 	# nlc_dat = '/home/sergey/Documents/SciWork/persist/data_nlc/20190722/'
 	# if_dat = '/home/sergey/Documents/SciWork/persist/data/20190722/'
@@ -120,22 +121,18 @@ def main(string=None):
 	if namespace.tmpdir == None:
 		temp_dir = '/data/persist/tmp/'
 	else:
-		if namespace.tmpdir[-1] != '/' : namespace.tmpdir+='/'
 		temp_dir = namespace.tmpdir
 
-	if namespace.ifdat[-1] != '/' : namespace.ifdat+='/'
 	if_dat = namespace.ifdat
 
 	if namespace.nlcdat == None:
 		nlc_dat = if_dat.replace('data','data_nlc')
 	else:
-		if namespace.nlcdat[-1] != '/' : namespace.nlcdat+='/'
 		nlc_dat = namespace.nlcdat
 
 	if namespace.resdir == None:
 		res_dir = nlc_dat
 	else:
-		if namespace.resdir[-1] != '/' : namespace.resdir+='/'
 		res_dir = namespace.resdir
 
 
@@ -150,13 +147,10 @@ def main(string=None):
 
 	dirs_nlc  = []
 	for path_t, _, _ in os.walk(nlc_dat):
-		if path_t != nlc_dat:
-			dirs_nlc.append(path_t+'/')
-		else:
-			dirs_nlc.append(path_t)
+		dirs_nlc.append(path_t)
 
 	for directory in dirs_nlc:
-		listNLC = glob.glob(directory+'*nlc*.fts')
+		listNLC = glob.glob(join(directory,'*nlc*.fts'))
 		for file in listNLC:
 			fitsFile = fits.open(file)
 			listFF.append(file)
@@ -190,12 +184,9 @@ def main(string=None):
 	dirs_if  = []
 	if namespace.subfolders == None:
 		for path_t, _, _ in os.walk(if_dat):
-			if path_t != if_dat:
-				dirs_if.append(path_t+'/')
-			else:
-				dirs_if.append(path_t)
+			dirs_if.append(path_t)
 	else:
-		namedirs = glob.glob(if_dat+'*/')
+		namedirs = glob.glob(join(if_dat,'*/'))
 		for namedir in namedirs:
 			for subfolder in namespace.subfolders:
 				if namedir.split('/')[-2] == subfolder:
@@ -205,7 +196,7 @@ def main(string=None):
 		exit()
 
 	for directory in dirs_if:
-		listIF = glob.glob(directory+'*-if-*.fits')
+		listIF = glob.glob(join(directory,'*-if-*.fits'))
 		for file in listIF:
 			fitsFile = fits.open(file)
 			listFF.append(file)
