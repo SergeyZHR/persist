@@ -108,7 +108,7 @@ def main(string=None):
 		namespace = parser.parse_args()
 
 
-	path=os.path.dirname(os.path.abspath(__file__) )+'/'
+	path=os.path.dirname(os.path.abspath(__file__) )+'/'		#WINDOWS MUST DIE!
 
 	# nlc_dat = '/home/sergey/Documents/SciWork/persist/data_nlc/20190722/'
 	# if_dat = '/home/sergey/Documents/SciWork/persist/data/20190722/'
