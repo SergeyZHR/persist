@@ -9,7 +9,7 @@ import numpy as np
 
 
 def correct(data,res,points,zeroLevel,scale,bias,nnc=False):
-
+	"""поиск пересвеченных, ушедших в 0, в процессе наблюдений, и их исправление"""
 
 	lastF = data[-1]
 

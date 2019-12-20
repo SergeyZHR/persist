@@ -55,6 +55,7 @@ def main(string):
 					imagedata = np.tile(imagedata,(len(Imagelist),1,1))
 			else:
 				imagedata[i,:,:] = np.array(hdulist[0].data, dtype=np.float32)
+			hdulist.close()
 		itime=hdulist[0].header['ITIME']
 		ndrs=hdulist[0].header['NDRS']
 		if ndrs >= ndr_min:
@@ -239,15 +240,19 @@ def main(string):
 					
 					hdulist=fits.open(patch+'bias_master.fts')
 					bias_full=hdulist[0].data
+					hdulist.close()
 
 					hdulist=fits.open(patch+'a_coef_master.fts')
 					a_coef_full=hdulist[0].data
+					hdulist.close()
 
 					hdulist=fits.open(patch+'b_coef_master.fts')
 					b_coef_full=hdulist[0].data
+					hdulist.close()
 
 					hdulist=fits.open(patch+'c_coef_master.fts')
 					c_coef_full=hdulist[0].data
+					hdulist.close()
 
 		#использовать часто надо не всю область, т.к. снимки были получены с части приемника
 		# выделяем и присваиваем нужную часть
@@ -258,15 +263,19 @@ def main(string):
 				elif (XX<=512) and (YY==0) and (WID>=1024) and (HGT==2048) :
 					hdulist=fits.open(patch+'bias_master.fts')
 					bias_full=hdulist[0].data
+					hdulist.close()
 
 					hdulist=fits.open(patch+'a_coef_master.fts')
 					a_coef_full=hdulist[0].data
+					hdulist.close()
 
 					hdulist=fits.open(patch+'b_coef_master.fts')
 					b_coef_full=hdulist[0].data
+					hdulist.close()
 
 					hdulist=fits.open(patch+'c_coef_master.fts')
 					c_coef_full=hdulist[0].data
+					hdulist.close()
 					a_coef=np.zeros((HGT,WID), dtype=np.float32)+a_coef_med
 					b_coef=np.zeros((HGT,WID), dtype=np.float32)+b_coef_med
 					c_coef=np.zeros((HGT,WID), dtype=np.float32)+c_coef_med

@@ -54,6 +54,7 @@ def createParser():
 
 
 def fa(x,a,alpha,b,beta):
+	"""функция для описания формы амплитуды персистенции, две прямые с наклонами alpha и beta"""
 	#x1=np.array(x)      # asarray 
 	x1=np.asarray(x)
 	ans = alpha*(x1-a)	
@@ -62,6 +63,7 @@ def fa(x,a,alpha,b,beta):
 	return ans
 
 def persistA(l_raw):
+	"""расчёт всех 4 компонент персистенции для кадра, записываются в 4 разных массива для оптимизации дальнейших вычислений"""
 	l = l_raw/60000
 
 	l[l>4]=4
@@ -82,27 +84,43 @@ def persistA(l_raw):
 	return np.dstack((a1,a2,a3,a4))
 
 def persistT(dt):
+	"""падение за время dt всех 4 экспонент"""
 	return np.array([np.exp(-1*dt/t01), np.exp(-1*dt/t02), np.exp(-1*dt/t03), np.exp(-1*dt/t04) ])#.astype(np.float)  #dtype float
 
 
 def ifN(s):
+	"""выделение номера неразрушающего считывания, например .../dark-10s-after-8-if-N.fits"""
 	if 'if' not in s:
 		return 0
 	else:
-		return int(s[s.find('-',-9)+1:][:-5])
+		return int(s.rsplit('-')[-1][:-5])
 
 def master_name(s):
+	"""выделение имени кадра, без номера считывания, например .../dark-10s-after-8"""
 	if 'if' not in s:
 		return -1
 	else:
-		return s[:s.find('-',-9)+1][:-4]
+		return s[:s.rfind('-')-3]
 
+def main_with_args(ifdat,resdir, nlcdat=None, tmpdir='/data/persist/tmp/', overwrite=False, subfolders=None ):
+	"""запуск программы с параметрами, передаваемыми через аргументы функции"""
+	string = '-d '+ifdat + ' -p ' + resdir +' -t '+tmpdir
+	if overwrite:
+		string+=' -o'
+	if nlcdat is not None:
+		string+=' -n '+ nlcdat
+	if subfolders is not None:
+		string+=' -s '
+		for fold in subfolders:
+			string+=fold+' '
 
+	main(string)
 
 def main(string=None):
+	"""Основная функция программы, через аргумент передаётся строка аргументов командной строки"""
 
 	parser = createParser()
-	if string!=None:
+	if string is not None:
 		import shlex
 		namespace = parser.parse_args(shlex.split(string))
 	else:	
@@ -249,6 +267,7 @@ def main(string=None):
 				last_time = frame['time']
 				dataILUM.loc[index,'is_add']=True
 				print('persistence from',frame['name'], 'add to array')
+				fitsFile.close()
 
 			except IOError as e:				#fix err
 				print(str(e))
